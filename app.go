@@ -12,20 +12,25 @@ type App struct {
 	tviewApp   *tview.Application
 	explorer   *tview.TreeView
 	editorArea *tview.TextArea
+	statusBar  *tview.TextView
 
 	activeWindow int
 	elements     []tview.Primitive
+
+	status string
 }
 
 func (a *App) Init() {
-	rootDir := "/home"
+	rootDir := "."
 
 	a.tviewApp = tview.NewApplication()
 	a.explorer = tview.NewTreeView()
 	a.editorArea = tview.NewTextArea()
+	a.statusBar = tview.NewTextView()
 
 	a.activeWindow = 0
 	a.elements = []tview.Primitive{a.explorer, a.editorArea}
+	a.status = "Initialization complete"
 
 	root := tview.NewTreeNode(rootDir).SetColor(tcell.ColorRed)
 	a.explorer.SetRoot(root).SetCurrentNode(root)
@@ -70,4 +75,9 @@ func (a *App) Init() {
 
 	a.editorArea.SetBorder(true)
 	a.editorArea.SetTitle("Editor")
+
+	a.statusBar.SetDynamicColors(true)
+	a.statusBar.SetRegions(true)
+	a.statusBar.SetTextAlign(tview.AlignLeft)
+	a.statusBar.SetBorder(true)
 }

@@ -15,7 +15,7 @@ func main() {
 
 	app.tviewApp.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
-		case tcell.KeyTab:
+		case tcell.KeyEsc:
 			app.activeWindow = (app.activeWindow + 1) % len(app.elements)
 			app.tviewApp.SetFocus(app.elements[app.activeWindow])
 			return nil
@@ -26,7 +26,6 @@ func main() {
 
 	//starting the application
 	if err := app.tviewApp.SetRoot(flex, true).SetFocus(app.explorer).Run(); err != nil {
-		panic(err)
+		app.status = err.Error()
 	}
-
 }
