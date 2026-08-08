@@ -10,6 +10,7 @@ import (
 
 func main() {
 	editor := tview.NewApplication()
+	editorArea := tview.NewTextArea()
 
 	rootDir := "/home"
 	root := tview.NewTreeNode(rootDir).SetColor(tcell.ColorRed)
@@ -52,13 +53,12 @@ func main() {
 	explorer.SetBorder(true)
 	explorer.SetTitle("Explorer")
 
-	editorBox := tview.NewBox().
-		SetBorder(true).
-		SetTitle("Editor")
+	editorArea.SetBorder(true)
+	editorArea.SetTitle("Editor")
 
 	flex := tview.NewFlex().
 		AddItem(explorer, 0, 1, true).
-		AddItem(editorBox, 0, 4, false)
+		AddItem(editorArea, 0, 4, false)
 
 	if err := editor.SetRoot(flex, true).SetFocus(explorer).Run(); err != nil {
 		panic(err)
