@@ -21,7 +21,7 @@ type App struct {
 }
 
 func (a *App) Init() {
-	rootDir := "."
+	rootDir := "/home"
 
 	a.tviewApp = tview.NewApplication()
 	a.explorer = tview.NewTreeView()
@@ -38,7 +38,7 @@ func (a *App) Init() {
 	add := func(target *tview.TreeNode, path string) {
 		files, err := os.ReadDir(path)
 		if err != nil {
-			panic(err)
+			a.ChangeStatus(err.Error())
 		}
 		for _, file := range files {
 			node := tview.NewTreeNode(file.Name()).
@@ -80,4 +80,12 @@ func (a *App) Init() {
 	a.statusBar.SetRegions(true)
 	a.statusBar.SetTextAlign(tview.AlignLeft)
 	a.statusBar.SetBorder(true)
+	// a.statusBar.SetTitle("Status")
+
+	a.ChangeStatus("Initialization complete")
+}
+
+func (a App) ChangeStatus(st string) {
+	a.status = st
+	a.statusBar.SetText(a.status)
 }

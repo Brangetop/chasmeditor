@@ -24,8 +24,13 @@ func main() {
 		return event
 	})
 
+	root := tview.NewFlex().
+		SetDirection(tview.FlexRow).
+		AddItem(flex, 0, 1, true).
+		AddItem(app.statusBar, 4, 0, false)
+
 	//starting the application
-	if err := app.tviewApp.SetRoot(flex, true).SetFocus(app.explorer).Run(); err != nil {
-		app.status = err.Error()
+	if err := app.tviewApp.SetRoot(root, true).SetFocus(app.explorer).Run(); err != nil {
+		app.ChangeStatus(err.Error())
 	}
 }
