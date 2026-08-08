@@ -43,7 +43,11 @@ func (a *App) Init() {
 		for _, file := range files {
 			node := tview.NewTreeNode(file.Name()).
 				SetReference(filepath.Join(path, file.Name())).
-				SetSelectable(file.IsDir())
+				// only directories are selecrable
+				//SetSelectable(file.IsDir())
+
+				// everything is selectable
+				SetSelectable(true)
 			if file.IsDir() {
 				node.SetColor(tcell.ColorGreen)
 			}
