@@ -63,15 +63,38 @@ func (a *App) Init() {
 		if reference == nil {
 			return // Selecting the root node does nothing.
 		}
-		children := node.GetChildren()
-		if len(children) == 0 {
-			// Load and show files in this directory.
-			path := reference.(string)
-			add(node, path)
-		} else {
-			// Collapse if visible, expand if collapsed.
-			node.SetExpanded(!node.IsExpanded())
+		path := reference.(string)
+		info, err := os.Stat(path)
+		if err != nil {
+			a.ChangeStatus(err.Error())
+			return
 		}
+
+		if info.IsDir() {
+			// lazy collapse
+			// redo in the nearest future with directory refreshing
+			children := node.GetChildren()
+			if len(children) == 0 {
+				// Load and show files in this directory.
+				path := reference.(string)
+				add(node, path)
+			} else {
+				// Collapse if visible, expand if collapsed.
+				node.SetExpanded(!node.IsExpanded())
+			}
+
+			return
+		}
+
+		// if not a dir => is a file
+		text, err := loadFileText(path)
+		if err != nil {
+			a.ChangeStatus(err.Error())
+			return
+		}
+
+		// writing file
+		a.WriteFile(path, text)
 	})
 
 	a.explorer.SetBorder(true)
@@ -89,7 +112,19 @@ func (a *App) Init() {
 	a.ChangeStatus("Initialization complete")
 }
 
-func (a App) ChangeStatus(st string) {
+func (a *App) ChangeStatus(st string) {
 	a.status = st
 	a.statusBar.SetText(a.status)
+}
+
+func (a *App) ChangeStatusOpenFile(path string) {
+	a.status = "Opened file: " + path
+	a.statusBar.SetText(a.status)
+}
+
+func (a *App) WriteFile(path, text string) {
+	a.editorArea.SetText(text, false)
+	a.editorArea.SetTitle(filepath.Base(path))
+
+	a.ChangeStatusOpenFile(path)
 }
