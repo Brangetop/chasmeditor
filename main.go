@@ -60,6 +60,22 @@ func main() {
 		AddItem(explorer, 0, 1, true).
 		AddItem(editorArea, 0, 4, false)
 
+	// logic of switching focus from one window to another
+	elements := []tview.Primitive{explorer, editorArea}
+	activeWindow := 0
+
+	editor.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case tcell.KeyTab:
+			activeWindow = (activeWindow + 1) % len(elements)
+			editor.SetFocus(elements[activeWindow])
+			return nil
+		}
+
+		return event
+	})
+
+	//starting the application
 	if err := editor.SetRoot(flex, true).SetFocus(explorer).Run(); err != nil {
 		panic(err)
 	}
