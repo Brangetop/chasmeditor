@@ -19,6 +19,15 @@ func main() {
 			app.activeWindow = (app.activeWindow + 1) % len(app.elements)
 			app.tviewApp.SetFocus(app.elements[app.activeWindow])
 			return nil
+
+		case tcell.KeyCtrlQ:
+			app.tviewApp.Stop()
+			return nil
+
+		case tcell.KeyCtrlS:
+			if err := app.SaveFile(app.currentPath); err != nil {
+				app.ChangeStatus(err.Error())
+			}
 		}
 
 		return event

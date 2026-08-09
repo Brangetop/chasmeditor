@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"errors"
 	"os"
 	"path/filepath"
 
@@ -18,11 +18,12 @@ type App struct {
 	activeWindow int
 	elements     []tview.Primitive
 
-	status string
+	status      string
+	currentPath string
 }
 
 func (a *App) Init() {
-	rootDir := "/home"
+	rootDir := "."
 
 	a.tviewApp = tview.NewApplication()
 	a.explorer = tview.NewTreeView()
@@ -114,6 +115,10 @@ func (a *App) Init() {
 	a.ChangeStatus("Initialization complete")
 }
 
+func (a *App) SetPath(path string) {
+	a.currentPath = path
+}
+
 func (a *App) ChangeStatus(st string) {
 	a.status = st
 	a.statusBar.SetText(a.status)
@@ -134,10 +139,15 @@ func (a *App) LoadFile(path string) {
 	a.editorArea.SetTitle(filepath.Base(path))
 
 	a.ChangeStatusOpenFile(path)
+	a.SetPath(path)
 }
 
-func (a *App) SaveFile(path string) {
+func (a *App) SaveFile(path string) error {
+	if path == "" {
+		return errors.New("Not a valid path")
+	}
 	text := a.editorArea.GetText()
 
-	fmt.Print(text)
+	a.ChangeStatus("Saved file: " + path)
+	return os.WriteFile(path, []byte(text), 0644)
 }
