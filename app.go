@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -87,14 +88,15 @@ func (a *App) Init() {
 		}
 
 		// if not a dir => is a file
-		text, err := loadFileText(path)
+		/* text, err := loadFileText(path)
 		if err != nil {
 			a.ChangeStatus(err.Error())
 			return
 		}
+		*/
 
-		// writing file
-		a.WriteFile(path, text)
+		// loading file
+		a.LoadFile(path)
 	})
 
 	a.explorer.SetBorder(true)
@@ -122,9 +124,20 @@ func (a *App) ChangeStatusOpenFile(path string) {
 	a.statusBar.SetText(a.status)
 }
 
-func (a *App) WriteFile(path, text string) {
+func (a *App) LoadFile(path string) {
+	text, err := loadFileText(path)
+	if err != nil {
+		a.ChangeStatus(err.Error())
+		return
+	}
 	a.editorArea.SetText(text, false)
 	a.editorArea.SetTitle(filepath.Base(path))
 
 	a.ChangeStatusOpenFile(path)
+}
+
+func (a *App) SaveFile(path string) {
+	text := a.editorArea.GetText()
+
+	fmt.Print(text)
 }
