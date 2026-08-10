@@ -14,6 +14,8 @@ type App struct {
 	explorer   *tview.TreeView
 	editorArea *tview.TextArea
 	statusBar  *tview.TextView
+	flex       *tview.Flex
+	root       *tview.Flex
 
 	activeWindow int
 	elements     []tview.Primitive
