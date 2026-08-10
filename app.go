@@ -20,6 +20,8 @@ type App struct {
 
 	status      string
 	currentPath string
+
+	// clipboard string
 }
 
 func (a *App) Init() {
@@ -124,6 +126,7 @@ func (a *App) ChangeStatus(st string) {
 	a.statusBar.SetText(a.status)
 }
 
+// maybe remove or implement similar method for saving
 func (a *App) ChangeStatusOpenFile(path string) {
 	a.status = "Opened file: " + path
 	a.statusBar.SetText(a.status)

@@ -8,6 +8,7 @@ func loadFileText(path string) (string, error) {
 		return "", err
 
 		// add status bar interface later here
+		// nah
 	}
 	return string(b), nil
 }

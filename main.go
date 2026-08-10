@@ -20,14 +20,23 @@ func main() {
 			app.tviewApp.SetFocus(app.elements[app.activeWindow])
 			return nil
 
+		// Exiting
 		case tcell.KeyCtrlQ:
 			app.tviewApp.Stop()
 			return nil
 
+		// Saving
 		case tcell.KeyCtrlS:
 			if err := app.SaveFile(app.currentPath); err != nil {
 				app.ChangeStatus(err.Error())
 			}
+			return nil
+
+		// Copying
+		case tcell.KeyCtrlC:
+			// need to find a way to work with system-wide clipboard, not managing the local one
+			// app.CopySelection()
+			return nil
 		}
 
 		return event
