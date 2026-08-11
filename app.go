@@ -23,8 +23,9 @@ type App struct {
 	status      string
 	currentPath string
 
-	pathInput   *tview.InputField
-	editingPath bool
+	pathInput        *tview.InputField
+	editingPath      bool
+	pathInputVisible bool
 	// clipboard string
 }
 
@@ -135,6 +136,8 @@ func (a *App) Init() {
 		AddItem(a.flex, 0, 1, true).
 		AddItem(a.statusBar, 4, 0, false).
 		AddItem(a.pathInput, 4, 0, false)
+
+	a.ShowPathInput(false)
 	// End
 	a.ChangeStatus("Initialization complete")
 }
@@ -173,7 +176,30 @@ func (a *App) SaveFile(path string) error {
 		return errors.New("Not a valid path")
 	}
 	text := a.editorArea.GetText()
+	a.ShowPathInput(true)
+
+	a.pathInput.SetText(path)
+	path = a.pathInput.GetText()
 
 	a.ChangeStatus("Saved file: " + path)
 	return os.WriteFile(path, []byte(text), 0644)
+}
+
+func (a *App) ShowPathInput(visible bool) {
+	a.pathInputVisible = visible
+
+	heightPathInput := 0
+	heighStatusBar := 4
+	if visible {
+		heightPathInput = 4
+		heighStatusBar = 0
+	}
+
+	a.root = tview.NewFlex().
+		SetDirection(tview.FlexRow).
+		AddItem(a.flex, 0, 1, true).
+		AddItem(a.statusBar, heighStatusBar, 0, false).
+		AddItem(a.pathInput, heightPathInput, 0, false)
+
+	a.tviewApp.SetRoot(a.root, true)
 }
