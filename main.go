@@ -38,7 +38,7 @@ func main() {
 	})
 
 	//starting the application
-	if err := app.tviewApp.SetRoot(root, true).SetFocus(app.explorer).Run(); err != nil {
+	if err := app.tviewApp.SetRoot(app.root, true).SetFocus(app.explorer).Run(); err != nil {
 		app.ChangeStatus(err.Error())
 	}
 }
