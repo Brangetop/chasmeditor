@@ -23,6 +23,8 @@ type App struct {
 	status      string
 	currentPath string
 
+	pathInput   *tview.InputField
+	editingPath bool
 	// clipboard string
 }
 
@@ -115,7 +117,19 @@ func (a *App) Init() {
 	a.statusBar.SetTextAlign(tview.AlignLeft)
 	a.statusBar.SetBorder(true)
 	// a.statusBar.SetTitle("Status")
+	a.pathInput = tview.NewInputField()
+	a.pathInput.
+		SetLabel("Save path: ").
+		SetFieldWidth(0).
+		SetBorder(true)
 
+	a.editingPath = false
+
+	// Initialize flex and root flex
+	a.flex = tview.NewFlex().
+		AddItem(a.explorer, 0, 1, true).
+		AddItem(a.editorArea, 0, 4, false)
+	// End
 	a.ChangeStatus("Initialization complete")
 }
 
@@ -141,6 +155,7 @@ func (a *App) LoadFile(path string) {
 		return
 	}
 	a.editorArea.SetText(text, false)
+
 	a.editorArea.SetTitle(filepath.Base(path))
 
 	a.ChangeStatusOpenFile(path)

@@ -9,10 +9,6 @@ func main() {
 	app := &App{}
 	app.Init()
 
-	flex := tview.NewFlex().
-		AddItem(app.explorer, 0, 1, true).
-		AddItem(app.editorArea, 0, 4, false)
-
 	app.tviewApp.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyEsc:
@@ -44,8 +40,9 @@ func main() {
 
 	root := tview.NewFlex().
 		SetDirection(tview.FlexRow).
-		AddItem(flex, 0, 1, true).
-		AddItem(app.statusBar, 4, 0, false)
+		AddItem(app.flex, 0, 1, true).
+		AddItem(app.statusBar, 4, 0, false).
+		AddItem(app.pathInput, 4, 0, false)
 
 	//starting the application
 	if err := app.tviewApp.SetRoot(root, true).SetFocus(app.explorer).Run(); err != nil {
