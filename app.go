@@ -176,13 +176,26 @@ func (a *App) SaveFile(path string) error {
 		return errors.New("Not a valid path")
 	}
 	text := a.editorArea.GetText()
+
 	a.ShowPathInput(true)
-
 	a.pathInput.SetText(path)
-	path = a.pathInput.GetText()
+	a.tviewApp.SetFocus(a.pathInput)
 
-	a.ChangeStatus("Saved file: " + path)
-	return os.WriteFile(path, []byte(text), 0644)
+	a.pathInput.SetDoneFunc(func(key tcell.Key) {
+		newPath := a.pathInput.GetText()
+		if newPath == "" {
+			a.ChangeStatus("Not a valid path")
+			return
+		}
+
+		a.ChangeStatus("Saved file: " + newPath)
+		_ = os.WriteFile(newPath, []byte(text), 0644) // handle error below later
+
+		a.ShowPathInput(false)
+		a.tviewApp.Draw()
+	})
+
+	return nil
 }
 
 func (a *App) ShowPathInput(visible bool) {
@@ -193,6 +206,7 @@ func (a *App) ShowPathInput(visible bool) {
 	if visible {
 		heightPathInput = 4
 		heighStatusBar = 0
+
 	}
 
 	a.root = tview.NewFlex().
