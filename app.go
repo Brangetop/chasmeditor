@@ -129,6 +129,12 @@ func (a *App) Init() {
 	a.flex = tview.NewFlex().
 		AddItem(a.explorer, 0, 1, true).
 		AddItem(a.editorArea, 0, 4, false)
+
+	a.root = tview.NewFlex().
+		SetDirection(tview.FlexRow).
+		AddItem(a.flex, 0, 1, true).
+		AddItem(a.statusBar, 4, 0, false).
+		AddItem(a.pathInput, 4, 0, false)
 	// End
 	a.ChangeStatus("Initialization complete")
 }
