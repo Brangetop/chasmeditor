@@ -41,7 +41,18 @@ func (a *App) Init() {
 	a.elements = []tview.Primitive{a.explorer, a.editorArea}
 	a.status = "Initialization complete"
 
-	root := tview.NewTreeNode(rootDir).SetColor(tcell.ColorRed)
+	rootLabel := filepath.Base(rootDir)
+	if rootDir == "." {
+		cwd, err := os.Getwd()
+		if err == nil {
+			rootLabel = filepath.Base(cwd)
+		}
+	}
+
+	root := tview.NewTreeNode(rootLabel).
+		SetReference(rootDir).
+		SetColor(tcell.ColorRed)
+
 	a.explorer.SetRoot(root).SetCurrentNode(root)
 
 	add := func(target *tview.TreeNode, path string) {
