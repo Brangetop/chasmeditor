@@ -169,6 +169,7 @@ func (a *App) LoadFile(path string) {
 
 	a.ChangeStatusOpenFile(path)
 	a.SetPath(path)
+	a.tviewApp.SetFocus(a.editorArea)
 }
 
 func (a *App) SaveFile(path string) error {
