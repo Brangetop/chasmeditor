@@ -26,6 +26,8 @@ type App struct {
 	pathInput        *tview.InputField
 	editingPath      bool
 	pathInputVisible bool
+
+	direcorryTreeVisible bool
 	// clipboard string
 }
 
@@ -39,7 +41,9 @@ func (a *App) Init() {
 
 	a.activeWindow = 0
 	a.elements = []tview.Primitive{a.explorer, a.editorArea}
-	a.status = "Initialization complete"
+	a.status = "Initializing"
+	a.ChangeStatus("Initializing")
+	a.direcorryTreeVisible = true
 
 	rootLabel := filepath.Base(rootDir)
 	if rootDir == "." {
@@ -229,4 +233,38 @@ func (a *App) ShowPathInput(visible bool) {
 		AddItem(a.pathInput, heightPathInput, 0, false)
 
 	a.tviewApp.SetRoot(a.root, true)
+}
+
+func (a *App) ShowDirectoryTree(visible bool) {
+	a.direcorryTreeVisible = visible
+
+	treeW := 0
+	if visible {
+		treeW = 1
+	}
+
+	a.flex = tview.NewFlex().
+		AddItem(a.explorer, 0, treeW, true).
+		AddItem(a.editorArea, 0, 4, false)
+
+	statusH := 4
+	pathH := 0
+	if a.pathInputVisible {
+		statusH = 0
+		pathH = 4
+	}
+
+	a.root = tview.NewFlex().
+		SetDirection(tview.FlexRow).
+		AddItem(a.flex, 0, 1, true).
+		AddItem(a.statusBar, statusH, 0, false).
+		AddItem(a.pathInput, pathH, 0, false)
+
+	a.tviewApp.SetRoot(a.root, true)
+
+	if visible {
+		a.tviewApp.SetFocus(a.explorer)
+	} else {
+		a.tviewApp.SetFocus(a.editorArea)
+	}
 }
