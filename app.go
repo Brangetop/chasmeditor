@@ -192,6 +192,7 @@ func (a *App) SaveFile(path string) error {
 		_ = os.WriteFile(newPath, []byte(text), 0644) // handle error below later
 
 		a.ShowPathInput(false)
+		a.tviewApp.SetFocus(a.editorArea)
 		// a.tviewApp.Draw()
 	})
 
