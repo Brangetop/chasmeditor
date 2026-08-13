@@ -28,7 +28,8 @@ type App struct {
 	pathInputVisible bool
 
 	direcorryTreeVisible bool
-	// clipboard string
+
+	// Tabs logic
 }
 
 func (a *App) Init() {

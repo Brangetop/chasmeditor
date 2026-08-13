@@ -32,6 +32,7 @@ func main() {
 			// need to find a way to work with system-wide clipboard, not managing the local one
 			// app.CopySelection()
 			return nil
+
 		case tcell.KeyCtrlB:
 			app.ShowDirectoryTree(!app.direcorryTreeVisible)
 			return nil
