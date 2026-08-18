@@ -10,13 +10,15 @@ func main() {
 
 	app.tviewApp.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
-		case tcell.KeyEsc:
+		case tcell.KeyCtrlO:
 			app.activeWindow = (app.activeWindow + 1) % len(app.elements)
 			app.tviewApp.SetFocus(app.elements[app.activeWindow])
 			return nil
 
 		// Exiting
 		case tcell.KeyCtrlQ:
+			//app.ExitWithSaving(app.currentPath)
+
 			app.tviewApp.Stop()
 			return nil
 

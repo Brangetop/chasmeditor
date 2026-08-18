@@ -30,6 +30,8 @@ type App struct {
 	direcorryTreeVisible bool
 
 	// Tabs logic
+	// so do i want something like split screen or multiple screens?
+
 }
 
 func (a *App) Init() {
@@ -186,6 +188,8 @@ func (a *App) LoadFile(path string) {
 	a.ChangeStatusOpenFile(path)
 	a.SetPath(path)
 	a.tviewApp.SetFocus(a.editorArea)
+
+	a.activeWindow += 1
 }
 
 func (a *App) SaveFile(path string) error {
@@ -205,12 +209,21 @@ func (a *App) SaveFile(path string) error {
 			return
 		}
 
-		a.ChangeStatus("Saved file: " + newPath)
-		_ = os.WriteFile(newPath, []byte(text), 0644) // handle error below later
+		if err := os.WriteFile(newPath, []byte(text), 0644); err != nil {
+			a.ChangeStatus("Error while saving file: " + err.Error())
+			return
+		}
+
+		// why doesnt it create a new directory when saving to */filename?
+		// handle later ig
 
 		a.ShowPathInput(false)
 		a.tviewApp.SetFocus(a.editorArea)
-		// a.tviewApp.Draw()
+
+		a.ChangeStatus("Saved file: " + newPath)
+
+		// a.tviewApp.Draw() // ts deadlocks the app for some reason,
+		// as i know its unnecessary so fuck it
 	})
 
 	return nil
