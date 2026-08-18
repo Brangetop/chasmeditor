@@ -192,7 +192,7 @@ func (a *App) LoadFile(path string) {
 	a.activeWindow += 1
 }
 
-func (a *App) SaveFile(path string) error {
+func (a *App) SaveFileAs(path string) error {
 	if path == "" {
 		return errors.New("Not a valid path")
 	}
@@ -225,6 +225,25 @@ func (a *App) SaveFile(path string) error {
 		// a.tviewApp.Draw() // ts deadlocks the app for some reason,
 		// as i know its unnecessary so fuck it
 	})
+
+	return nil
+}
+
+func (a *App) SaveFile(path string) error {
+	if path == "" {
+		return errors.New("Not a valid path")
+	}
+	text := a.editorArea.GetText()
+
+	if err := os.WriteFile(path, []byte(text), 0644); err != nil {
+		a.ChangeStatus("Error while saving file: " + err.Error())
+		return nil
+	}
+
+	a.ShowPathInput(false)
+	a.tviewApp.SetFocus(a.editorArea)
+
+	a.ChangeStatus("Saved file: " + path)
 
 	return nil
 }
